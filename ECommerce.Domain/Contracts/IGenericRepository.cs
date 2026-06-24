@@ -9,5 +9,9 @@ namespace ECommerce.Domain.Contracts
         void Remove(TEntity entity);
         Task<TEntity?> GetByIdAsync(TKey id, CancellationToken cancellationToken = default);
         Task<IReadOnlyList<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);
+        Task<IReadOnlyList<TEntity>> GetAllAsync(ISpecifications<TEntity, TKey> specifications, CancellationToken cancellationToken = default);
+        Task<TEntity?> GetByIdAsync(ISpecifications<TEntity, TKey> specifications, CancellationToken cancellationToken = default);
+        Task<int> CountAsync(ISpecifications<TEntity, TKey> specifications, CancellationToken cancellationToken = default);
+
     }
 }

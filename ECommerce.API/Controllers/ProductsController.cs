@@ -1,4 +1,5 @@
-﻿using ECommerce.Application.Contracts;
+﻿using ECommerce.Application.Common;
+using ECommerce.Application.Contracts;
 using ECommerce.Application.DTOs.Product;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,10 +8,10 @@ namespace ECommerce.API.Controllers
     public class ProductsController(IProductService productService) : ApiBaseController
     {
         [HttpGet]
-        [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
-        public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetAllProducts(CancellationToken cancellationToken)
+        [ProducesResponseType(typeof(PaginatedResult<ProductDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<PaginatedResult<ProductDto>>> GetAllProducts([FromQuery] ProductQueryParams queryParams, CancellationToken cancellationToken)
         {
-            var products = await productService.GetAllProductsAsync(cancellationToken);
+            var products = await productService.GetAllProductsAsync(queryParams, cancellationToken);
             return ToActionResult(products);
         }
 

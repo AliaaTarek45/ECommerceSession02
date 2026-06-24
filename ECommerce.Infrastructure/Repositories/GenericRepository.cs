@@ -1,6 +1,7 @@
 ﻿using ECommerce.Domain.Common;
 using ECommerce.Domain.Contracts;
 using ECommerce.Infrastructure.Data;
+using ECommerce.Infrastructure.Specifications;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.Infrastructure.Repositories
@@ -17,5 +18,15 @@ namespace ECommerce.Infrastructure.Repositories
 
         public async Task<IReadOnlyList<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)
             => await dbContext.Set<TEntity>().AsNoTracking().ToListAsync(cancellationToken);
+
+        public async Task<IReadOnlyList<TEntity>> GetAllAsync(ISpecifications<TEntity, TKey> specifications, CancellationToken cancellationToken = default)
+
+            => await SpecificationEvaluator.CreateQuery(dbContext.Set<TEntity>(), specifications).ToListAsync(cancellationToken);
+
+        public async Task<TEntity?> GetByIdAsync(ISpecifications<TEntity, TKey> specifications, CancellationToken cancellationToken = default)
+            => await SpecificationEvaluator.CreateQuery(dbContext.Set<TEntity>(), specifications).FirstOrDefaultAsync(cancellationToken);
+
+        public async Task<int> CountAsync(ISpecifications<TEntity, TKey> specifications, CancellationToken cancellationToken = default)
+             => await SpecificationEvaluator.CreateQuery(dbContext.Set<TEntity>(), specifications).CountAsync(cancellationToken);
     }
 }
